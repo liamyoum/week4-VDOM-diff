@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>가상 DOM 비교 실습장</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow">1단계 레이아웃</p>
+          <h1>가상 DOM 비교 실습장</h1>
+          <p class="subtitle">
+            편집 영역 HTML, 실제 영역 렌더링, 패치 로그, 히스토리 스택 레이아웃을
+            먼저 구성해 이후 학습 단계를 준비합니다.
+          </p>
+        </div>
+
+        <div class="toolbar" aria-label="제어 버튼">
+          <button id="patch-btn" class="action-button action-button--primary" type="button">
+            패치 적용
+          </button>
+          <button id="undo-btn" class="action-button" type="button" disabled>
+            되돌리기
+          </button>
+          <button id="redo-btn" class="action-button" type="button" disabled>
+            다시 실행
+          </button>
+          <button id="reset-btn" class="action-button" type="button">
+            초기화
+          </button>
+        </div>
+      </header>
+
+      <div id="status-bar" class="status-bar" role="status" aria-live="polite">
+        레이아웃 준비가 끝났습니다. 2단계에서 DOM 파싱과 VDOM 변환이 연결됩니다.
+      </div>
+
+      <main class="dashboard" aria-label="가상 DOM 학습 작업 영역">
+        <section class="panel panel--live" aria-labelledby="live-title">
+          <div class="panel__header">
+            <div>
+              <p class="panel__eyebrow">렌더링 결과</p>
+              <h2 id="live-title">실제 영역</h2>
+            </div>
+            <span class="panel__badge">패치 대상</span>
+          </div>
+          <div class="panel__body">
+            <div id="live-root" class="live-root" aria-label="실제 렌더링 미리보기"></div>
+          </div>
+        </section>
+
+        <section class="panel panel--editor" aria-labelledby="editor-title">
+          <div class="panel__header">
+            <div>
+              <p class="panel__eyebrow">편집 가능한 소스</p>
+              <h2 id="editor-title">편집 영역</h2>
+            </div>
+            <span class="panel__badge">단일 루트 HTML</span>
+          </div>
+          <div class="panel__body">
+            <label class="visually-hidden" for="edit-input">편집 가능한 HTML 소스</label>
+            <textarea
+              id="edit-input"
+              class="editor"
+              spellcheck="false"
+              aria-describedby="editor-help"
+            ></textarea>
+            <p id="editor-help" class="panel__hint">
+              파싱된 DOM이 하나의 VNode 트리로 변환되도록 루트 요소는 하나만 유지하세요.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel panel--log" aria-labelledby="log-title">
+          <div class="panel__header">
+            <div>
+              <p class="panel__eyebrow">비교 결과</p>
+              <h2 id="log-title">패치 로그</h2>
+            </div>
+            <span class="panel__badge panel__badge--muted">대기 중</span>
+          </div>
+          <div class="panel__body">
+            <ol id="patch-log" class="info-list" aria-live="polite">
+              <li>
+                1단계 플레이스홀더입니다. 이전 VDOM과 새 VDOM을 비교한 뒤 diff 결과가
+                여기에 표시됩니다.
+              </li>
+              <li>예상 패치 타입: REPLACE, PROPS, TEXT, INSERT, REMOVE</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="panel panel--history" aria-labelledby="history-title">
+          <div class="panel__header">
+            <div>
+              <p class="panel__eyebrow">상태 스택</p>
+              <h2 id="history-title">히스토리</h2>
+            </div>
+            <span class="panel__badge panel__badge--muted">4단계 예정</span>
+          </div>
+          <div class="panel__body">
+            <ol id="history-list" class="info-list" aria-live="polite">
+              <li>초기 스냅샷이 히스토리 동기화 대기 상태입니다.</li>
+              <li>스냅샷 추적이 시작되면 되돌리기와 다시 실행 버튼이 활성화됩니다.</li>
+            </ol>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="initial-markup">
+      <section class="sample-card" data-theme="mint">
+        <header class="sample-card__header">
+          <span class="sample-card__eyebrow">학습 데모</span>
+          <h3>가상 DOM 학습 카드</h3>
+          <p class="sample-card__description">
+            HTML 소스에서 텍스트, 속성, 리스트 항목을 수정하며 diff와 patch 실험을
+            준비할 수 있습니다.
+          </p>
+        </header>
+        <ul class="sample-card__list">
+          <li data-state="stable">텍스트 변경 대상</li>
+          <li data-state="watch">속성 변경 대상</li>
+          <li data-state="new">자식 추가 및 삭제 대상</li>
+        </ul>
+      </section>
+    </template>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
